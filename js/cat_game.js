@@ -73,6 +73,7 @@ const Direction = {
 class Cat {
     posX = 50;
     posY = 50;
+    direction = Direction.DOWN;
 
     constructor(spriteSheet) {
         this.spriteSheet = spriteSheet;
@@ -80,8 +81,15 @@ class Cat {
 
     draw() {
         let sprite;
-
-        sprite = this.spriteSheet.getSprite(1, 1);
+        if (this.direction === Direction.RIGHT) {
+            sprite = this.spriteSheet.getSprite(2, 1);
+        } else if (this.direction === Direction.LEFT) {
+            sprite = this.spriteSheet.getSprite(1, 1);
+        } else if (this.direction === Direction.UP) {
+            sprite = this.spriteSheet.getSprite(2, 2);
+        } else if (this.direction === Direction.DOWN) {
+            sprite = this.spriteSheet.getSprite(1, 2);
+        }
         sprite.draw(this.posX, this.posY);
     }
 }
@@ -94,6 +102,16 @@ class CatGame extends Game {
         const catSpriteSheet = new SpriteSheet('brown_cat.png');
         this.cat = new Cat(catSpriteSheet);
         console.log('Setting up game...');
+    }
+
+    handleEvent(event) {
+        console.log(event);
+        // TOD: support more keys
+        if (event.type === 'keydown') {
+            if (event.key === 'w') {
+                this.cat.direction = Direction.UP;
+            }
+        }
     }
 
     update() {
