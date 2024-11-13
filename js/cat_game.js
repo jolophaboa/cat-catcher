@@ -110,6 +110,22 @@ class CatGame extends Game {
         if (event.type === 'keydown') {
             if (event.key === 'w') {
                 this.cat.direction = Direction.UP;
+                this.cat.posY -= 1
+            }
+       
+            if (event.key === 's') {
+                this.cat.direction = Direction.DOWN;
+                this.cat.posY += 1
+            }
+        
+            if (event.key === 'a') {
+                this.cat.direction = Direction.LEFT
+                this.cat.posX -= 1;
+            }
+
+            if (event.key === 'd') {
+                this.cat.direction = Direction.RIGHT;
+                this.cat.posX += 1;
             }
         }
     }
