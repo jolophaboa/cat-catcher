@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f0f0f0;
+        }
+        canvas {
+            border: 1px solid #000;
+            background: white;
+            image-rendering: pixelated;
+            height: 100px;
+            width: 100px;
+        }
+        img {
+            image-rendering: pixelated;
+        }
+    </style>
+    <script src="js/cat_game.js"></script>
+
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const WIDTH_IN_BLOCKS = 24;
+        const HEIGHT_IN_BLOCKS = 14;
+        const WIDTH_IN_PIXELS = WIDTH_IN_BLOCKS * BLOCK_SIZE;
+        const HEIGHT_IN_PIXELS = HEIGHT_IN_BLOCKS * BLOCK_SIZE;
+
+        // Set canvas size to window size
+        function resizeCanvas() {
+           const scaleW = Math.floor(window.innerWidth * 0.9 / WIDTH_IN_PIXELS);
+           const scaleH = Math.floor(window.innerHeight * 0.9 / HEIGHT_IN_PIXELS);
+           const scale = Math.min(scaleW, scaleH);
+           canvas.width = WIDTH_IN_PIXELS;
+           canvas.height = HEIGHT_IN_PIXELS;
+           canvas.style.width = `${WIDTH_IN_PIXELS * scale}px`;
+           canvas.style.height = `${HEIGHT_IN_PIXELS * scale}px`;
+        }
+
+        // Initial resize
+        resizeCanvas();
+
+        // Resize canvas when window is resized
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('DOMContentLoaded', function() {
+            const game = new CatGame(canvas);
+            game.start();
+
+        });
+    </script>
+    <img src="images/sprite_sheets/brown_cat.png" alt="cat">
+</body>
+</html>
