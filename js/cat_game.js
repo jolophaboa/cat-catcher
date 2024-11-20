@@ -91,6 +91,7 @@ class Cat {
             let Number1 = Math.random() * max;
             let RandomDirection = Math.floor(Number1)
             this.direction = RandomDirection
+            this.moving = true
             
 
             this.lastRandomChangeTime = time;
