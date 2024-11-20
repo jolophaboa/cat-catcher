@@ -11,6 +11,7 @@ class Game {
         Game.ctx = Game.canvas.getContext('2d');
         // Handle keyboard and mouse events
         window.addEventListener('keydown', this.handleEvent.bind(this));
+        window.addEventListener('keyup', this.handleEvent.bind(this));
         Game.canvas.addEventListener('mousedown', this.handleEvent.bind(this));
         Game.canvas.addEventListener('mouseup', this.handleEvent.bind(this));
         Game.canvas.addEventListener('mousemove', this.handleEvent.bind(this));
@@ -73,23 +74,51 @@ const Direction = {
 class Cat {
     posX = 50;
     posY = 50;
+    moving = true;
     direction = Direction.DOWN;
+    lastRandomChangeTime = Date.now();
 
     constructor(spriteSheet) {
         this.spriteSheet = spriteSheet;
     }
 
     draw() {
+        let time = Date.now();
+        if (time - this.lastRandomChangeTime > 1000) {
+            // One second has gone by since the last random change
+            // Make a random change to the cat's state
+            let max = 4
+            let Number1 = Math.random() * max;
+            let RandomDirection = Math.floor(Number1)
+            this.direction = RandomDirection
+            
+
+            this.lastRandomChangeTime = time;
+        }
+
         let sprite;
         if (this.direction === Direction.RIGHT) {
             sprite = this.spriteSheet.getSprite(2, 1);
+            if (this.moving) {
+                this.posX += 1
+            }
         } else if (this.direction === Direction.LEFT) {
             sprite = this.spriteSheet.getSprite(1, 1);
+            if (this.moving) {
+                this.posX -= 1
+            }
         } else if (this.direction === Direction.UP) {
             sprite = this.spriteSheet.getSprite(2, 2);
+            if (this.moving) {
+                this.posY -= 1
+            }
         } else if (this.direction === Direction.DOWN) {
             sprite = this.spriteSheet.getSprite(1, 2);
+            if (this.moving) {
+                this.posY += 1
+            }
         }
+
         sprite.draw(this.posX, this.posY);
     }
 }
@@ -110,23 +139,26 @@ class CatGame extends Game {
         if (event.type === 'keydown') {
             if (event.key === 'w') {
                 this.cat.direction = Direction.UP;
-                this.cat.posY -= 1
+                this.cat.moving = true;
             }
        
             if (event.key === 's') {
                 this.cat.direction = Direction.DOWN;
-                this.cat.posY += 1
+                this.cat.moving = true;
             }
         
             if (event.key === 'a') {
-                this.cat.direction = Direction.LEFT
-                this.cat.posX -= 1;
+                this.cat.direction = Direction.LEFT;
+                this.cat.moving = true;
             }
 
             if (event.key === 'd') {
                 this.cat.direction = Direction.RIGHT;
-                this.cat.posX += 1;
+                this.cat.moving = true;
             }
+        }
+        if (event.type === 'keyup') {
+            this.cat.moving = false;
         }
     }
 
