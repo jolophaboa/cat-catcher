@@ -1,5 +1,9 @@
 const BLOCK_SIZE = 16;
 const SPRITE_SHEET_ROOT = 'images/sprite_sheets/';
+const WIDTH_IN_BLOCKS = 24;
+const HEIGHT_IN_BLOCKS = 14;
+const WIDTH_IN_PIXELS = WIDTH_IN_BLOCKS * BLOCK_SIZE;
+const HEIGHT_IN_PIXELS = HEIGHT_IN_BLOCKS * BLOCK_SIZE;
 
 class Game {
 
@@ -93,6 +97,7 @@ class Cat {
             this.direction = RandomDirection
             this.moving = true
             
+            
 
             this.lastRandomChangeTime = time;
         }
@@ -119,6 +124,23 @@ class Cat {
                 this.posY += 1
             }
         }
+        if (this.posY == 0)
+        {
+            this.posY += 1
+        }
+        if (this.posX == 0)
+        {
+            this.posX += 1
+        }
+        if (this.posY == HEIGHT_IN_PIXELS - BLOCK_SIZE)
+        {
+            this.posY -= 1
+        }
+        if (this.posX == WIDTH_IN_PIXELS - BLOCK_SIZE)
+        {
+            this.posX -= 1
+        }
+        
 
         sprite.draw(this.posX, this.posY);
     }
