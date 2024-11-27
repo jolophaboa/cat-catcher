@@ -43,12 +43,12 @@ class Game {
 
 class Sprite {
 
-    constructor(image, offsetX, offsetY) {
+    constructor(image, offsetX, offsetY, widthInBlocks, heightInBlocks) {
         this.image = image;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
-        this.width = BLOCK_SIZE;
-        this.height = BLOCK_SIZE;
+        this.width = BLOCK_SIZE * widthInBlocks;
+        this.height = BLOCK_SIZE * heightInBlocks;
     }
 
     draw(x, y) {
@@ -58,13 +58,25 @@ class Sprite {
 
 class SpriteSheet {
     image;
-    constructor(imageName) {
+    sprites = {};
+
+    constructor(imageName, widthInBlocks=1, heightInBlocks=1) {
         this.image = new Image();
         this.image.src = SPRITE_SHEET_ROOT + imageName;
+        this.widthInBlocks = widthInBlocks;
+        this.heightInBlocks = heightInBlocks;
     }
 
-    getSprite(x, y) {
-        return new Sprite(this.image, x * BLOCK_SIZE, y * BLOCK_SIZE);
+    describeSprite(x, y, direction) {
+        this.sprites[direction] = new Sprite(
+            this.image,
+            x * BLOCK_SIZE,
+            y * BLOCK_SIZE, 
+            this.widthInBlocks, this.heightInBlocks);
+    }
+
+    getSprite(direction) {
+        return this.sprites[direction];
     }
 }
 
@@ -75,16 +87,12 @@ const Direction = {
     RIGHT: 3
 };
 
-class Cat {
+class MovingObject {
     posX = 50;
     posY = 50;
     moving = true;
     direction = Direction.DOWN;
-    lastRandomChangeTime = Date.now();
-
-    constructor(spriteSheet) {
-        this.spriteSheet = spriteSheet;
-    }
+    spriteSheet;
 
     keepInBounds() {
         if (this.posY == 0)
@@ -105,6 +113,45 @@ class Cat {
         }
     }
 
+    draw() {
+        let sprite = this.spriteSheet.getSprite(this.direction);
+        if (this.direction === Direction.RIGHT) {
+            if (this.moving) {
+                this.posX += 1
+            }
+        } else if (this.direction === Direction.LEFT) {
+            if (this.moving) {
+                this.posX -= 1
+            }
+        } else if (this.direction === Direction.UP) {
+            if (this.moving) {
+                this.posY -= 1
+            }
+        } else if (this.direction === Direction.DOWN) {
+            if (this.moving) {
+                this.posY += 1
+            }
+        }
+       
+        this.keepInBounds();
+
+        sprite.draw(this.posX, this.posY);
+    }
+}
+
+class Cat extends MovingObject {
+
+    lastRandomChangeTime = Date.now();
+
+    constructor(spriteSheet) {
+        super();
+        this.spriteSheet = new SpriteSheet('brown_cat.png');
+        this.spriteSheet.describeSprite(1, 2, Direction.DOWN);
+        this.spriteSheet.describeSprite(2, 1, Direction.RIGHT);
+        this.spriteSheet.describeSprite(1, 1, Direction.LEFT);
+        this.spriteSheet.describeSprite(2, 2, Direction.UP);
+    }
+
     moveRandomly() {
         let time = Date.now();
         if (time - this.lastRandomChangeTime > 1000) {
@@ -121,32 +168,21 @@ class Cat {
 
     draw() {
         this.moveRandomly();
-        let sprite;
-        if (this.direction === Direction.RIGHT) {
-            sprite = this.spriteSheet.getSprite(2, 1);
-            if (this.moving) {
-                this.posX += 1
-            }
-        } else if (this.direction === Direction.LEFT) {
-            sprite = this.spriteSheet.getSprite(1, 1);
-            if (this.moving) {
-                this.posX -= 1
-            }
-        } else if (this.direction === Direction.UP) {
-            sprite = this.spriteSheet.getSprite(2, 2);
-            if (this.moving) {
-                this.posY -= 1
-            }
-        } else if (this.direction === Direction.DOWN) {
-            sprite = this.spriteSheet.getSprite(1, 2);
-            if (this.moving) {
-                this.posY += 1
-            }
-        }
-       
-        this.keepInBounds();
+        super.draw();
 
-        sprite.draw(this.posX, this.posY);
+    }
+
+   
+}
+
+class Player extends MovingObject {
+    constructor(spriteSheet) {
+        super();
+        this.spriteSheet = new SpriteSheet('berny.png', 1, 2);
+        this.spriteSheet.describeSprite(0, 1, Direction.LEFT);
+        this.spriteSheet.describeSprite(1, 1, Direction.RIGHT);
+        this.spriteSheet.describeSprite(2, 1, Direction.DOWN);
+        this.spriteSheet.describeSprite(3, 1, Direction.UP);
     }
 }
 
@@ -155,8 +191,9 @@ class CatGame extends Game {
     cat;
     
     setup() {
-        const catSpriteSheet = new SpriteSheet('brown_cat.png');
-        this.cat = new Cat(catSpriteSheet);
+        
+        this.cat = new Cat();
+        this.player = new Player();
         console.log('Setting up game...');
     }
 
@@ -165,32 +202,33 @@ class CatGame extends Game {
         // TOD: support more keys
         if (event.type === 'keydown') {
             if (event.key === 'w') {
-                this.cat.direction = Direction.UP;
-                this.cat.moving = true;
+                this.player.direction = Direction.UP;
+                this.player.moving = true;
             }
        
             if (event.key === 's') {
-                this.cat.direction = Direction.DOWN;
-                this.cat.moving = true;
+                this.player.direction = Direction.DOWN;
+                this.player.moving = true;
             }
         
             if (event.key === 'a') {
-                this.cat.direction = Direction.LEFT;
-                this.cat.moving = true;
+                this.player.direction = Direction.LEFT;
+                this.player.moving = true;
             }
 
             if (event.key === 'd') {
-                this.cat.direction = Direction.RIGHT;
-                this.cat.moving = true;
+                this.player.direction = Direction.RIGHT;
+                this.player.moving = true;
             }
         }
         if (event.type === 'keyup') {
-            this.cat.moving = false;
+            this.player.moving = false;
         }
     }
 
     update() {
         Game.ctx.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
         this.cat.draw();
+        this.player.draw();
     }
 }
