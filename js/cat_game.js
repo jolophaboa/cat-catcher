@@ -86,7 +86,26 @@ class Cat {
         this.spriteSheet = spriteSheet;
     }
 
-    draw() {
+    keepInBounds() {
+        if (this.posY == 0)
+        {
+            this.posY += 1
+        }
+        if (this.posX == 0)
+        {
+            this.posX += 1
+        }
+        if (this.posY == HEIGHT_IN_PIXELS - BLOCK_SIZE)
+        {
+            this.posY -= 1
+        }
+        if (this.posX == WIDTH_IN_PIXELS - BLOCK_SIZE)
+        {
+            this.posX -= 1
+        }
+    }
+
+    moveRandomly() {
         let time = Date.now();
         if (time - this.lastRandomChangeTime > 1000) {
             // One second has gone by since the last random change
@@ -96,12 +115,12 @@ class Cat {
             let RandomDirection = Math.floor(Number1)
             this.direction = RandomDirection
             this.moving = true
-            
-            
-
             this.lastRandomChangeTime = time;
         }
+    }
 
+    draw() {
+        this.moveRandomly();
         let sprite;
         if (this.direction === Direction.RIGHT) {
             sprite = this.spriteSheet.getSprite(2, 1);
@@ -124,23 +143,8 @@ class Cat {
                 this.posY += 1
             }
         }
-        if (this.posY == 0)
-        {
-            this.posY += 1
-        }
-        if (this.posX == 0)
-        {
-            this.posX += 1
-        }
-        if (this.posY == HEIGHT_IN_PIXELS - BLOCK_SIZE)
-        {
-            this.posY -= 1
-        }
-        if (this.posX == WIDTH_IN_PIXELS - BLOCK_SIZE)
-        {
-            this.posX -= 1
-        }
-        
+       
+        this.keepInBounds();
 
         sprite.draw(this.posX, this.posY);
     }
