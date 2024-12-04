@@ -146,10 +146,14 @@ class MovingObject {
     }
 }
 
-
+const CatMode = {
+    WANDERING: 0,
+    FOLLOWING: 1,
+};
 class Cat extends MovingObject {
 
     lastRandomChangeTime = Date.now();
+    mode = CatMode.WANDERING
 
     constructor(spriteSheet) {
         super();
@@ -176,7 +180,9 @@ class Cat extends MovingObject {
     }
 
     draw() {
-        this.moveRandomly();
+        if (this.mode == CatMode.WANDERING){
+            this.moveRandomly();
+        }
         super.draw();
 
     }
