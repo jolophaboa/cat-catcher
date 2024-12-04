@@ -5,6 +5,8 @@ const HEIGHT_IN_BLOCKS = 14;
 const WIDTH_IN_PIXELS = WIDTH_IN_BLOCKS * BLOCK_SIZE;
 const HEIGHT_IN_PIXELS = HEIGHT_IN_BLOCKS * BLOCK_SIZE;
 
+let singleQuoteString = 'This is prank';
+
 class Game {
 
     static canvas;
@@ -84,7 +86,8 @@ const Direction = {
     UP: 0,
     DOWN: 1,
     LEFT: 2,
-    RIGHT: 3
+    RIGHT: 3,
+    STOPPED: 4
 };
 
 class MovingObject {
@@ -131,6 +134,10 @@ class MovingObject {
             if (this.moving) {
                 this.posY += 1
             }
+        } else if (this.direction === Direction.STOPPED) {
+            if (this.moving) {
+                this.posX += 0
+            }
         }
        
         this.keepInBounds();
@@ -138,6 +145,7 @@ class MovingObject {
         sprite.draw(this.posX, this.posY);
     }
 }
+
 
 class Cat extends MovingObject {
 
@@ -150,6 +158,7 @@ class Cat extends MovingObject {
         this.spriteSheet.describeSprite(2, 1, Direction.RIGHT);
         this.spriteSheet.describeSprite(1, 1, Direction.LEFT);
         this.spriteSheet.describeSprite(2, 2, Direction.UP);
+        this.spriteSheet.describeSprite(0, 1, Direction.STOPPED);
     }
 
     moveRandomly() {
@@ -157,7 +166,7 @@ class Cat extends MovingObject {
         if (time - this.lastRandomChangeTime > 1000) {
             // One second has gone by since the last random change
             // Make a random change to the cat's state
-            let max = 4
+            let max = 5
             let Number1 = Math.random() * max;
             let RandomDirection = Math.floor(Number1)
             this.direction = RandomDirection
