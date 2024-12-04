@@ -100,18 +100,22 @@ class MovingObject {
     keepInBounds() {
         if (this.posY == 0)
         {
+            this.posY += 1
             this.direction = Direction.DOWN
         }
         if (this.posX == 0)
         {
+            this.posX += 1
             this.direction = Direction.RIGHT
         }
         if (this.posY == HEIGHT_IN_PIXELS - BLOCK_SIZE)
         {
+            this.posY -= 1
             this.direction = Direction.UP
         }
         if (this.posX == WIDTH_IN_PIXELS - BLOCK_SIZE)
         {
+            this.posX -= 1
             this.direction = Direction.LEFT
         }
     }
