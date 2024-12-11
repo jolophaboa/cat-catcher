@@ -157,9 +157,9 @@ const CatMode = {
 class Cat extends MovingObject {
 
     lastRandomChangeTime = Date.now();
-    mode = CatMode.WANDERING
+    mode = CatMode.WANDERING;
 
-    constructor(spriteSheet) {
+    constructor() {
         super();
         this.spriteSheet = new SpriteSheet('brown_cat.png');
         this.spriteSheet.describeSprite(1, 2, Direction.DOWN);
@@ -191,8 +191,7 @@ class Cat extends MovingObject {
 
     }
 
-    mode = CatMode.FOLLOWING
-
+    /*
     constructor(spriteSheet) {
         super();
         this.spriteSheet = new SpriteSheet('Hungry_cat.png');
@@ -211,6 +210,7 @@ class Cat extends MovingObject {
         super.draw();
 
     }
+    */
 
    
 }
