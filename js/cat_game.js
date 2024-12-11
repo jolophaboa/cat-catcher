@@ -5,7 +5,7 @@ const HEIGHT_IN_BLOCKS = 14;
 const WIDTH_IN_PIXELS = WIDTH_IN_BLOCKS * BLOCK_SIZE;
 const HEIGHT_IN_PIXELS = HEIGHT_IN_BLOCKS * BLOCK_SIZE;
 
-let singleQuoteString = 'This is prank';
+let singleQuoteString = 'Testing Testing';
 
 class Game {
 
@@ -191,8 +191,32 @@ class Cat extends MovingObject {
 
     }
 
+    mode = CatMode.FOLLOWING
+
+    constructor(spriteSheet) {
+        super();
+        this.spriteSheet = new SpriteSheet('Hungry_cat.png');
+        this.spriteSheet.describeSprite(1, 2, Direction.DOWN);
+        this.spriteSheet.describeSprite(2, 1, Direction.RIGHT);
+        this.spriteSheet.describeSprite(1, 1, Direction.LEFT);
+        this.spriteSheet.describeSprite(2, 2, Direction.UP);
+        this.spriteSheet.describeSprite(0, 1, Direction.STOPPED);
+    }
+
+
+    draw() {
+        if (this.mode == CatMode.WANDERING){
+            this.moveRandomly();
+        }
+        super.draw();
+
+    }
+
    
 }
+   
+
+
 
 class Player extends MovingObject {
     constructor(spriteSheet) {
