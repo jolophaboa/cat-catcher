@@ -95,7 +95,8 @@ class MovingObject {
     posY = 50;
     moving = true;
     direction = Direction.DOWN;
-    spriteSheet;
+    spriteSheets = {};
+    currentSpriteSheet;
 
     keepInBounds() {
         if (this.posY == 0)
@@ -121,7 +122,7 @@ class MovingObject {
     }
 
     draw() {
-        let sprite = this.spriteSheet.getSprite(this.direction);
+        let sprite = this.currentSpriteSheet.getSprite(this.direction);
         if (this.direction === Direction.RIGHT) {
             if (this.moving) {
                 this.posX += 1
@@ -161,12 +162,24 @@ class Cat extends MovingObject {
 
     constructor() {
         super();
-        this.spriteSheet = new SpriteSheet('brown_cat.png');
-        this.spriteSheet.describeSprite(1, 2, Direction.DOWN);
-        this.spriteSheet.describeSprite(2, 1, Direction.RIGHT);
-        this.spriteSheet.describeSprite(1, 1, Direction.LEFT);
-        this.spriteSheet.describeSprite(2, 2, Direction.UP);
-        this.spriteSheet.describeSprite(0, 1, Direction.STOPPED);
+        let wanderingSpriteSheet = new SpriteSheet('brown_cat.png');
+        wanderingSpriteSheet.describeSprite(1, 2, Direction.DOWN);
+        wanderingSpriteSheet.describeSprite(2, 1, Direction.RIGHT);
+        wanderingSpriteSheet.describeSprite(1, 1, Direction.LEFT);
+        wanderingSpriteSheet.describeSprite(2, 2, Direction.UP);
+        wanderingSpriteSheet.describeSprite(0, 1, Direction.STOPPED);
+        this.spriteSheets[CatMode.WANDERING] = wanderingSpriteSheet;
+
+        let followingSpriteSheet = new SpriteSheet('Hungry_cat.png');
+        followingSpriteSheet.describeSprite(1, 2, Direction.DOWN);
+        followingSpriteSheet.describeSprite(2, 1, Direction.RIGHT);
+        followingSpriteSheet.describeSprite(1, 1, Direction.LEFT);
+        followingSpriteSheet.describeSprite(2, 2, Direction.UP);
+        followingSpriteSheet.describeSprite(0, 1, Direction.STOPPED);
+        this.spriteSheets[CatMode.FOLLOWING] = followingSpriteSheet;
+
+        this.currentSpriteSheet = followingSpriteSheet;
+        
     }
 
     moveRandomly() {
@@ -190,28 +203,6 @@ class Cat extends MovingObject {
         super.draw();
 
     }
-
-    /*
-    constructor(spriteSheet) {
-        super();
-        this.spriteSheet = new SpriteSheet('Hungry_cat.png');
-        this.spriteSheet.describeSprite(1, 2, Direction.DOWN);
-        this.spriteSheet.describeSprite(2, 1, Direction.RIGHT);
-        this.spriteSheet.describeSprite(1, 1, Direction.LEFT);
-        this.spriteSheet.describeSprite(2, 2, Direction.UP);
-        this.spriteSheet.describeSprite(0, 1, Direction.STOPPED);
-    }
-
-
-    draw() {
-        if (this.mode == CatMode.WANDERING){
-            this.moveRandomly();
-        }
-        super.draw();
-
-    }
-    */
-
    
 }
    
@@ -219,13 +210,13 @@ class Cat extends MovingObject {
 
 
 class Player extends MovingObject {
-    constructor(spriteSheet) {
+    constructor() {
         super();
-        this.spriteSheet = new SpriteSheet('berny.png', 1, 2);
-        this.spriteSheet.describeSprite(0, 1, Direction.LEFT);
-        this.spriteSheet.describeSprite(1, 1, Direction.RIGHT);
-        this.spriteSheet.describeSprite(2, 1, Direction.DOWN);
-        this.spriteSheet.describeSprite(3, 1, Direction.UP);
+        this.currentSpriteSheet = new SpriteSheet('berny.png', 1, 2);
+        this.currentSpriteSheet.describeSprite(0, 1, Direction.LEFT);
+        this.currentSpriteSheet.describeSprite(1, 1, Direction.RIGHT);
+        this.currentSpriteSheet.describeSprite(2, 1, Direction.DOWN);
+        this.currentSpriteSheet.describeSprite(3, 1, Direction.UP);
     }
 }
 
