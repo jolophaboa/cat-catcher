@@ -90,6 +90,32 @@ const Direction = {
     STOPPED: 4
 };
 
+function isNearby(object1, object2) {
+    let center1 = object1.centerPoint();
+    let center2 = object2.centerPoint();
+    let distanceY = Math.abs(center1.y - center2.y);
+    let distanceX = Math.abs(center1.x - center2.x);
+    let distanceSquared = distanceX * distanceX + distanceY * distanceY;
+    let distance = Math.sqrt(distanceSquared);
+
+    if (distance > BLOCK_SIZE * 2) {
+        return false;
+    } else {
+        return true;
+    }
+
+    
+}
+
+class Point {
+    x = 0;
+    y = 0;
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
 class MovingObject {
     posX = 50;
     posY = 50;
@@ -97,6 +123,11 @@ class MovingObject {
     direction = Direction.DOWN;
     spriteSheets = {};
     currentSpriteSheet;
+
+    centerPoint() {
+        return new Point(this.posX + BLOCK_SIZE / 2,
+            this.posY + BLOCK_SIZE / 2);
+    }
 
     keepInBounds() {
         if (this.posY == 0)
@@ -197,7 +228,8 @@ class Cat extends MovingObject {
     }
 
     draw() {
-        if (this.mode == CatMode.WANDERING){
+        this.currentSpriteSheet = this.spriteSheets[this.mode];
+        if (this.mode == CatMode.WANDERING) {
             this.moveRandomly();
         }
         super.draw();
@@ -262,6 +294,13 @@ class CatGame extends Game {
 
     update() {
         Game.ctx.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
+
+        if (isNearby(this.cat, this.player)) {
+            this.cat.mode = CatMode.FOLLOWING;
+        } else {
+            this.cat.mode = CatMode.WANDERING;
+        }
+
         this.cat.draw();
         this.player.draw();
     }
