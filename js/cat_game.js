@@ -193,7 +193,7 @@ class Cat extends MovingObject {
 
     constructor() {
         super();
-        let wanderingSpriteSheet = new SpriteSheet('brown_cat.png');
+        let wanderingSpriteSheet = new SpriteSheet('cat_in_suit.png');
         wanderingSpriteSheet.describeSprite(1, 2, Direction.DOWN);
         wanderingSpriteSheet.describeSprite(2, 1, Direction.RIGHT);
         wanderingSpriteSheet.describeSprite(1, 1, Direction.LEFT);
