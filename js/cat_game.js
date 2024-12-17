@@ -191,9 +191,9 @@ class Cat extends MovingObject {
     lastRandomChangeTime = Date.now();
     mode = CatMode.WANDERING;
 
-    constructor() {
+    constructor(wandering_sprite, following_sprite) {
         super();
-        let wanderingSpriteSheet = new SpriteSheet('cat_in_suit.png');
+        let wanderingSpriteSheet = new SpriteSheet(wandering_sprite);
         wanderingSpriteSheet.describeSprite(1, 2, Direction.DOWN);
         wanderingSpriteSheet.describeSprite(2, 1, Direction.RIGHT);
         wanderingSpriteSheet.describeSprite(1, 1, Direction.LEFT);
@@ -201,7 +201,7 @@ class Cat extends MovingObject {
         wanderingSpriteSheet.describeSprite(0, 1, Direction.STOPPED);
         this.spriteSheets[CatMode.WANDERING] = wanderingSpriteSheet;
 
-        let followingSpriteSheet = new SpriteSheet('Hungry_cat.png');
+        let followingSpriteSheet = new SpriteSheet(following_sprite);
         followingSpriteSheet.describeSprite(1, 2, Direction.DOWN);
         followingSpriteSheet.describeSprite(2, 1, Direction.RIGHT);
         followingSpriteSheet.describeSprite(1, 1, Direction.LEFT);
@@ -255,10 +255,11 @@ class Player extends MovingObject {
 
 class CatGame extends Game {
     cat;
-    
+    cat2;
     setup() {
         
-        this.cat = new Cat();
+        this.cat = new Cat('brown_cat.png', 'Hungry_cat.png');
+        this.cat2 = new Cat('black_cat.png', 'cat_in_suit.png');
         this.player = new Player();
         console.log('Setting up game...');
     }
@@ -300,8 +301,14 @@ class CatGame extends Game {
         } else {
             this.cat.mode = CatMode.WANDERING;
         }
+        if (isNearby(this.cat2, this.player)) {
+            this.cat2.mode = CatMode.FOLLOWING;
+        } else {
+            this.cat2.mode = CatMode.WANDERING;
+        }
 
         this.cat.draw();
+        this.cat2.draw();
         this.player.draw();
     }
 }
