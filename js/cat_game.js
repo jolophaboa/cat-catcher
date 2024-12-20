@@ -256,10 +256,14 @@ class Player extends MovingObject {
 class CatGame extends Game {
     cat;
     cat2;
+    cat3;
+    cat4;
     setup() {
         
         this.cat = new Cat('brown_cat.png', 'Hungry_cat.png');
-        this.cat2 = new Cat('black_cat.png', 'cat_in_suit.png');
+        this.cat2 = new Cat('cat_in_suit.png','Hungry_cat.png');
+        this.cat3 = new Cat('calico_cat.png','Hungry_cat.png');
+        this.cat4 = new Cat('black_cat.png','Hungry_cat.png');
         this.player = new Player();
         console.log('Setting up game...');
     }
@@ -306,9 +310,22 @@ class CatGame extends Game {
         } else {
             this.cat2.mode = CatMode.WANDERING;
         }
+        if (isNearby(this.cat3, this.player)) {
+            this.cat3.mode = CatMode.FOLLOWING;
+        } else {
+            this.cat3.mode = CatMode.WANDERING;
+        }
+        if (isNearby(this.cat4, this.player)) {
+            this.cat4.mode = CatMode.FOLLOWING;
+        } else {
+            this.cat4.mode = CatMode.WANDERING;
+        }
+        
 
         this.cat.draw();
         this.cat2.draw();
+        this.cat3.draw();
+        this.cat4.draw();
         this.player.draw();
     }
 }
