@@ -254,16 +254,20 @@ class Player extends MovingObject {
 
 
 class CatGame extends Game {
-    cat;
-    cat2;
-    cat3;
-    cat4;
+    cats = []
+
     setup() {
+        this.cats = [
+            new Cat('brown_cat.png', 'Hungry_cat.png'),
+            new Cat('cat_in_suit.png','Hungry_cat.png'),
+            new Cat('calico_cat.png','Hungry_cat.png'),
+            new Cat('black_cat.png','Hungry_cat.png'),
+            new Cat('brown_cat.png', 'Hungry_cat.png'),
+            new Cat('cat_in_suit.png','Hungry_cat.png'),
+            new Cat('calico_cat.png','Hungry_cat.png'),
+            new Cat('black_cat.png','Hungry_cat.png'),
+        ]
         
-        this.cat = new Cat('brown_cat.png', 'Hungry_cat.png');
-        this.cat2 = new Cat('cat_in_suit.png','Hungry_cat.png');
-        this.cat3 = new Cat('calico_cat.png','Hungry_cat.png');
-        this.cat4 = new Cat('black_cat.png','Hungry_cat.png');
         this.player = new Player();
         console.log('Setting up game...');
     }
@@ -299,33 +303,16 @@ class CatGame extends Game {
 
     update() {
         Game.ctx.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
+        for (let cat of this.cats) {
+            if (isNearby(cat, this.player)) {
+                cat.mode = CatMode.FOLLOWING;
+            } else {
+                cat.mode = CatMode.WANDERING;
+            }   
+            cat.draw(); 
+        }
+    
 
-        if (isNearby(this.cat, this.player)) {
-            this.cat.mode = CatMode.FOLLOWING;
-        } else {
-            this.cat.mode = CatMode.WANDERING;
-        }
-        if (isNearby(this.cat2, this.player)) {
-            this.cat2.mode = CatMode.FOLLOWING;
-        } else {
-            this.cat2.mode = CatMode.WANDERING;
-        }
-        if (isNearby(this.cat3, this.player)) {
-            this.cat3.mode = CatMode.FOLLOWING;
-        } else {
-            this.cat3.mode = CatMode.WANDERING;
-        }
-        if (isNearby(this.cat4, this.player)) {
-            this.cat4.mode = CatMode.FOLLOWING;
-        } else {
-            this.cat4.mode = CatMode.WANDERING;
-        }
-        
-
-        this.cat.draw();
-        this.cat2.draw();
-        this.cat3.draw();
-        this.cat4.draw();
         this.player.draw();
     }
 }

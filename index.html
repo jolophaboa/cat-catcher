@@ -38,9 +38,9 @@
 
         // Set canvas size to window size
         function resizeCanvas() {
-           const scaleW = Math.floor(window.innerWidth * 0.9 / WIDTH_IN_PIXELS);
-           const scaleH = Math.floor(window.innerHeight * 0.9 / HEIGHT_IN_PIXELS);
-           const scale = Math.min(scaleW, scaleH);
+           const scaleW = Math.floor(window.innerWidth * 0.95 * window.devicePixelRatio / WIDTH_IN_PIXELS);
+           const scaleH = Math.floor(window.innerHeight * 0.95 * window.devicePixelRatio / HEIGHT_IN_PIXELS);
+           const scale = Math.min(scaleW, scaleH) / window.devicePixelRatio;
            canvas.width = WIDTH_IN_PIXELS;
            canvas.height = HEIGHT_IN_PIXELS;
            canvas.style.width = `${WIDTH_IN_PIXELS * scale}px`;
