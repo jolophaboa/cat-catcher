@@ -214,8 +214,10 @@ class Cat extends MovingObject {
     }
 
     moveRandomly() {
+        let max = 20000
+        let number3 = Math.random() * max;
         let time = Date.now();
-        if (time - this.lastRandomChangeTime > 1000) {
+        if (time - this.lastRandomChangeTime > number3) {
             // One second has gone by since the last random change
             // Make a random change to the cat's state
             let max = 5
@@ -253,20 +255,41 @@ class Player extends MovingObject {
 }
 
 
+const possibleCats = [
+    ['brown_cat.png', 'Hungry_cat.png'],
+    ['cat_in_suit.png','Hungry_cat.png'],
+    ['calico_cat.png','Hungry_cat.png'],
+    ['black_cat.png','Hungry_cat.png'],
+    ['rapper_cat.png', 'Hungry_cat.png'],
+    ['police_cat.png','Hungry_cat.png'],
+    ['white_cat.png','Hungry_cat.png'],
+    ['prisoner_cat.png','Hungry_cat.png'],
+    ['evil_cat.png', 'Hungry_cat.png'],
+    ['unicorn_cat.png','Hungry_cat.png'],
+    ['swamp_cat.png','Hungry_cat.png'],
+    ['tiger_cat.png','Hungry_cat.png'],
+];
+
+function randomCat() {
+    // pick a random index
+    let max = possibleCats.length;
+    let catNumber = Math.floor(Math.random() * max);
+    let catInfo = possibleCats[catNumber];
+    return new Cat(catInfo[0], catInfo[1])
+
+}
+
 class CatGame extends Game {
     cats = []
 
     setup() {
-        this.cats = [
-            new Cat('brown_cat.png', 'Hungry_cat.png'),
-            new Cat('cat_in_suit.png','Hungry_cat.png'),
-            new Cat('calico_cat.png','Hungry_cat.png'),
-            new Cat('black_cat.png','Hungry_cat.png'),
-            new Cat('brown_cat.png', 'Hungry_cat.png'),
-            new Cat('cat_in_suit.png','Hungry_cat.png'),
-            new Cat('calico_cat.png','Hungry_cat.png'),
-            new Cat('black_cat.png','Hungry_cat.png'),
-        ]
+        
+        
+        let max = 18
+        let numberofcats = 2 + Math.floor(Math.random() * max);
+        for (let i = 0; i<numberofcats; i++) {
+            this.cats.push(randomCat());
+        }
         
         this.player = new Player();
         console.log('Setting up game...');
