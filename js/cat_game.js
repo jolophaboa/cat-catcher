@@ -256,18 +256,18 @@ class Player extends MovingObject {
 
 
 const possibleCats = [
-    ['brown_cat.png', 'Hungry_cat.png'],
-    ['cat_in_suit.png','Hungry_cat.png'],
-    ['calico_cat.png','Hungry_cat.png'],
-    ['black_cat.png','Hungry_cat.png'],
-    ['rapper_cat.png', 'Hungry_cat.png'],
-    ['police_cat.png','Hungry_cat.png'],
-    ['white_cat.png','Hungry_cat.png'],
-    ['prisoner_cat.png','Hungry_cat.png'],
-    ['evil_cat.png', 'Hungry_cat.png'],
-    ['unicorn_cat.png','Hungry_cat.png'],
-    ['swamp_cat.png','Hungry_cat.png'],
-    ['tiger_cat.png','Hungry_cat.png'],
+    ['brown_cat.png', 'hungry_cat.png'],
+    ['cat_in_suit.png','hungry_cat.png'],
+    ['calico_cat.png','hungry_cat.png'],
+    ['black_cat.png','hungry_cat.png'],
+    ['rapper_cat.png', 'hungry_cat.png'],
+    ['police_cat.png','hungry_cat.png'],
+    ['white_cat.png','hungry_cat.png'],
+    ['prisoner_cat.png','hungry_cat.png'],
+    ['evil_cat.png', 'hungry_cat.png'],
+    ['unicorn_cat.png','hungry_cat.png'],
+    ['swamp_cat.png','hungry_cat.png'],
+    ['tiger_cat.png','hungry_cat.png'],
 ];
 
 function randomCat() {
