@@ -261,7 +261,7 @@ const possibleCats = [
     ['calico_cat.png','Hungry_cat.png'],
     ['black_cat.png','Hungry_cat.png'],
     //['rapper_cat.png', 'Hungry_cat.png'],
-    //['police_cat.png','Hungry_cat.png'],
+    ['police_cat.png','Hungry_cat.png'],
     ['white_cat.png','Hungry_cat.png'],
    // ['prisoner_cat.png','Hungry_cat.png'],
     //['evil_cat.png', 'Hungry_cat.png'],
