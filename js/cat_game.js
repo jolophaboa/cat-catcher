@@ -185,6 +185,7 @@ class MovingObject {
 const CatMode = {
     WANDERING: 0,
     FOLLOWING: 1,
+    LOAFING: 2,
 };
 class Cat extends MovingObject {
 
@@ -267,6 +268,7 @@ const possibleCats = [
     ['white_cat_2.png','hungry_cat.png'],
     ['pale_cat.png','hungry_cat.png'],
     ['striped_brown_cat.png', 'hungry_cat.png'],
+    ['striped_dark_grey_cat.png', 'hungry_cat.png'],
 ];
 
 function randomCat() {
