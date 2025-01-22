@@ -266,6 +266,7 @@ const possibleCats = [
     ['orange_cat.png','hungry_cat.png'],
     ['white_cat_2.png','hungry_cat.png'],
     ['pale_cat.png','hungry_cat.png'],
+    ['striped_brown_cat.png', 'hungry_cat.png'],
 ];
 
 function randomCat() {
