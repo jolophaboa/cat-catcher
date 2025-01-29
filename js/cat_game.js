@@ -186,7 +186,19 @@ const CatMode = {
     WANDERING: 0,
     FOLLOWING: 1,
     LOAFING: 2,
+    SITTING: 3,
 };
+
+
+const CatSpeed = {
+    STOPPED: 0,
+    SLOW: 1,
+    NORMAL: 2,
+    FAST: 3,
+}
+
+
+
 class Cat extends MovingObject {
 
     lastRandomChangeTime = Date.now();
