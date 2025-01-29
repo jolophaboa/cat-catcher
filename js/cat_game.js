@@ -116,13 +116,23 @@ class Point {
     }
 }
 
+
+
+const Speed = {
+    STOPPED: 0,
+    SLOW: 1,
+    NORMAL: 2,
+    FAST: 3,
+}
 class MovingObject {
     posX = 50;
     posY = 50;
     moving = true;
+    speed = Speed.NORMAL;
     direction = Direction.DOWN;
     spriteSheets = {};
     currentSpriteSheet;
+
 
     centerPoint() {
         return new Point(this.posX + BLOCK_SIZE / 2,
@@ -130,45 +140,48 @@ class MovingObject {
     }
 
     keepInBounds() {
-        if (this.posY == 0)
+        if (this.posY <= 0)
         {
-            this.posY += 1
+            this.posY += 10
             this.direction = Direction.DOWN
         }
-        if (this.posX == 0)
+        if (this.posX <= 0)
         {
-            this.posX += 1
+            this.posX += 10
             this.direction = Direction.RIGHT
         }
-        if (this.posY == HEIGHT_IN_PIXELS - BLOCK_SIZE)
+        if (this.posY >= HEIGHT_IN_PIXELS - BLOCK_SIZE)
         {
-            this.posY -= 1
+            this.posY -= 10
             this.direction = Direction.UP
         }
-        if (this.posX == WIDTH_IN_PIXELS - BLOCK_SIZE)
+        if (this.posX >= WIDTH_IN_PIXELS - BLOCK_SIZE)
         {
-            this.posX -= 1
+            this.posX -= 10
             this.direction = Direction.LEFT
         }
     }
 
     draw() {
         let sprite = this.currentSpriteSheet.getSprite(this.direction);
+
+        let distance = 1;
+
         if (this.direction === Direction.RIGHT) {
             if (this.moving) {
-                this.posX += 1
+                this.posX += distance
             }
         } else if (this.direction === Direction.LEFT) {
             if (this.moving) {
-                this.posX -= 1
+                this.posX -= distance
             }
         } else if (this.direction === Direction.UP) {
             if (this.moving) {
-                this.posY -= 1
+                this.posY -= distance
             }
         } else if (this.direction === Direction.DOWN) {
             if (this.moving) {
-                this.posY += 1
+                this.posY += distance
             }
         } else if (this.direction === Direction.STOPPED) {
             if (this.moving) {
@@ -190,12 +203,7 @@ const CatMode = {
 };
 
 
-const CatSpeed = {
-    STOPPED: 0,
-    SLOW: 1,
-    NORMAL: 2,
-    FAST: 3,
-}
+
 
 
 
@@ -203,7 +211,7 @@ class Cat extends MovingObject {
 
     lastRandomChangeTime = Date.now();
     mode = CatMode.WANDERING;
-
+    
     constructor(wandering_sprite, following_sprite) {
         super();
         let wanderingSpriteSheet = new SpriteSheet(wandering_sprite);
