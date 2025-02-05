@@ -54,7 +54,7 @@ class Sprite {
     }
 
     draw(x, y) {
-        Game.ctx.drawImage(this.image, this.offsetX, this.offsetY, this.width, this.height, x, y, this.width, this.height); 
+        Game.ctx.drawImage(this.image, this.offsetX, this.offsetY, this.width, this.height, Math.round(x), Math.round(y), this.width, this.height); 
     }
 }
 
@@ -128,7 +128,7 @@ class MovingObject {
     posX = 50;
     posY = 50;
     moving = true;
-    speed = Speed.NORMAL;
+    speed = Speed.SLOW;
     direction = Direction.DOWN;
     spriteSheets = {};
     currentSpriteSheet;
@@ -140,13 +140,13 @@ class MovingObject {
 
     distancePerFrame(){
         if (this.speed == Speed.NORMAL){
-            return 2
+            return 1
         }
         if (this.speed == Speed.FAST){
-            return 3
+            return 1.5
         }
         if (this.speed == Speed.SLOW){
-            return 1
+            return 0.75
         }
     }
     keepInBounds() {
