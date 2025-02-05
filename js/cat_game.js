@@ -133,31 +133,41 @@ class MovingObject {
     spriteSheets = {};
     currentSpriteSheet;
 
-
     centerPoint() {
         return new Point(this.posX + BLOCK_SIZE / 2,
             this.posY + BLOCK_SIZE / 2);
     }
 
+    distancePerFrame(){
+        if (this.speed == Speed.NORMAL){
+            return 2
+        }
+        if (this.speed == Speed.FAST){
+            return 3
+        }
+        if (this.speed == Speed.SLOW){
+            return 1
+        }
+    }
     keepInBounds() {
         if (this.posY <= 0)
         {
-            this.posY += 10
+            this.posY += this.distancePerFrame()
             this.direction = Direction.DOWN
         }
         if (this.posX <= 0)
         {
-            this.posX += 10
+            this.posX += this.distancePerFrame()
             this.direction = Direction.RIGHT
         }
         if (this.posY >= HEIGHT_IN_PIXELS - BLOCK_SIZE)
         {
-            this.posY -= 10
+            this.posY -= this.distancePerFrame()
             this.direction = Direction.UP
         }
         if (this.posX >= WIDTH_IN_PIXELS - BLOCK_SIZE)
         {
-            this.posX -= 10
+            this.posX -= this.distancePerFrame()
             this.direction = Direction.LEFT
         }
     }
@@ -165,7 +175,7 @@ class MovingObject {
     draw() {
         let sprite = this.currentSpriteSheet.getSprite(this.direction);
 
-        let distance = 1;
+        let distance = this.distancePerFrame();
 
         if (this.direction === Direction.RIGHT) {
             if (this.moving) {
@@ -203,7 +213,12 @@ const CatMode = {
 };
 
 
-
+const CatSpeed = {
+    STOPPED: 0,
+    SLOW: 1,
+    NORMAL: 2,
+    FAST: 3,
+}
 
 
 
@@ -211,7 +226,7 @@ class Cat extends MovingObject {
 
     lastRandomChangeTime = Date.now();
     mode = CatMode.WANDERING;
-    
+
     constructor(wandering_sprite, following_sprite) {
         super();
         let wanderingSpriteSheet = new SpriteSheet(wandering_sprite);
