@@ -330,9 +330,16 @@ class CatGame extends Game {
         this.player = new Player();
         console.log('Setting up game...');
     }
-
+     
     handleEvent(event) {
         console.log(event);
+
+        if (event.shiftKey){
+            this.player.speed = Speed.FAST
+        } else{
+            this.player.speed = Speed.NORMAL
+        }
+
         // TOD: support more keys
         if (event.type === 'keydown') {
             if (event.key === 'w') {
