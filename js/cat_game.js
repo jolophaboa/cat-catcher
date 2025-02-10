@@ -128,7 +128,7 @@ class MovingObject {
     posX = 50;
     posY = 50;
     moving = true;
-    speed = Speed.SLOW;
+    speed = Speed.NORMAL;
     direction = Direction.DOWN;
     spriteSheets = {};
     currentSpriteSheet;
