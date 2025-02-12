@@ -143,7 +143,7 @@ class MovingObject {
             return 1
         }
         if (this.speed == Speed.FAST){
-            return 1.5
+            return 1.3
         }
         if (this.speed == Speed.SLOW){
             return 0.75
@@ -248,7 +248,19 @@ class Cat extends MovingObject {
         this.currentSpriteSheet = followingSpriteSheet;
         
     }
-
+    randomSpeed() {
+        let max = 3;
+        let RSN = Math.random() * max;
+        if (RSN <= 1){
+            this.speed = Speed.SLOW;
+        }
+        else if (RSN >= 2){
+            this.speed = Speed.FAST;
+        }
+        else {
+            this.speed = Speed.NORMAL;
+        }
+    }
     moveRandomly() {
         let max = 20000
         let number3 = Math.random() * max;
@@ -261,6 +273,7 @@ class Cat extends MovingObject {
             let RandomDirection = Math.floor(Number1)
             this.direction = RandomDirection
             this.moving = true
+            this.randomSpeed();
             this.lastRandomChangeTime = time;
         }
     }
@@ -330,7 +343,7 @@ class CatGame extends Game {
         this.player = new Player();
         console.log('Setting up game...');
     }
-     
+
     handleEvent(event) {
         console.log(event);
 
