@@ -345,32 +345,40 @@ class CatGame extends Game {
     }
 
     handleEvent(event) {
-        console.log(event);
+        //console.log(event);
 
         if (event.shiftKey){
             this.player.speed = Speed.FAST
         } else{
             this.player.speed = Speed.NORMAL
         }
-
         // TOD: support more keys
         if (event.type === 'keydown') {
-            if (event.key === 'w') {
+
+            //console.log ("code is", event.code)
+            //console.log ("key is", event.key)
+            //console.log ("repeat is", event.repeat)
+
+            if (event.repeat){
+                //ignore events caused by letter keys being held down
+                return
+            }
+            if (event.code === 'KeyW' || event.code === 'ArrowUp') {
                 this.player.direction = Direction.UP;
                 this.player.moving = true;
             }
-       
-            if (event.key === 's') {
+
+            if (event.code === 'KeyS' || event.code === 'ArrowDown') {
                 this.player.direction = Direction.DOWN;
                 this.player.moving = true;
             }
-        
-            if (event.key === 'a') {
+
+            if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
                 this.player.direction = Direction.LEFT;
                 this.player.moving = true;
             }
 
-            if (event.key === 'd') {
+            if (event.code === 'KeyD' || event.code === 'ArrowRight') {
                 this.player.direction = Direction.RIGHT;
                 this.player.moving = true;
             }
