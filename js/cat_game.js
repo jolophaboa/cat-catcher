@@ -359,9 +359,15 @@ class CatGame extends Game {
         console.log('Setting up game...');
     }
 
+    keyIsPressed(key) {
+        // Usage: keyIsPressed('ArrowUp')
+        let keyBit = GameKeys[key];
+        return (this.keysPressed & keyBit) == keyBit;
+    }
+
     handleEvent(event) {
 
-        console.log(event);
+        // console.log(event);
 
         if (event.type === 'keydown') {
             // See whether we care about this key
@@ -375,50 +381,40 @@ class CatGame extends Game {
                 this.keysPressed = this.keysPressed & ~GameKeys[event.code];
             }
         }
-        console.log("KEYS PRESSED: ", Number(this.keysPressed).toString(2));
+        //console.log("KEYS PRESSED: ", Number(this.keysPressed).toString(2));
 
-        if (event.shiftKey){
+    }
+
+    update() {
+
+        if (this.keyIsPressed('ShiftLeft') || this.keyIsPressed('ShiftRight')) {
             this.player.speed = Speed.FAST
         } else{
             this.player.speed = Speed.NORMAL
         }
-        // TOD: support more keys
-        if (event.type === 'keydown') {
 
-            //console.log ("code is", event.code)
-            //console.log ("key is", event.key)
-            //console.log ("repeat is", event.repeat)
+        this.player.moving = false;
 
-            if (event.repeat){
-                //ignore events caused by letter keys being held down
-                return
-            }
-            if (event.code === 'KeyW' || event.code === 'ArrowUp') {
-                this.player.direction = Direction.UP;
-                this.player.moving = true;
-            }
-
-            if (event.code === 'KeyS' || event.code === 'ArrowDown') {
-                this.player.direction = Direction.DOWN;
-                this.player.moving = true;
-            }
-
-            if (event.code === 'KeyA' || event.code === 'ArrowLeft') {
-                this.player.direction = Direction.LEFT;
-                this.player.moving = true;
-            }
-
-            if (event.code === 'KeyD' || event.code === 'ArrowRight') {
-                this.player.direction = Direction.RIGHT;
-                this.player.moving = true;
-            }
+        if (this.keyIsPressed('KeyW') || this.keyIsPressed('ArrowUp')) {
+            this.player.direction = Direction.UP;
+            this.player.moving = true;
         }
-        if (event.type === 'keyup') {
-            this.player.moving = false;
-        }
-    }
 
-    update() {
+        if (this.keyIsPressed('KeyS') || this.keyIsPressed('ArrowDown')) {
+            this.player.direction = Direction.DOWN;
+            this.player.moving = true;
+        }
+
+        if (this.keyIsPressed('KeyA') || this.keyIsPressed('ArrowLeft')) {
+            this.player.direction = Direction.LEFT;
+            this.player.moving = true;
+        }
+
+        if (this.keyIsPressed('KeyD') || this.keyIsPressed('ArrowRight')) {
+            this.player.direction = Direction.RIGHT;
+            this.player.moving = true;
+        }
+
         Game.ctx.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
         for (let cat of this.cats) {
             if (isNearby(cat, this.player)) {
