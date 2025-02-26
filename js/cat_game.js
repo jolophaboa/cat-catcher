@@ -328,8 +328,23 @@ function randomCat() {
 
 }
 
+
+const GameKeys = {
+    ArrowUp: 1,
+    ArrowDown: 2,
+    ArrowLeft: 4,
+    ArrowRight: 8,
+    KeyW: 16,
+    KeyS: 32,
+    KeyA: 64,
+    KeyD: 128,
+    ShiftLeft: 256,
+    ShiftRight: 512,   
+}
+
 class CatGame extends Game {
     cats = []
+    keysPressed = 0;
 
     setup() {
         
@@ -345,7 +360,22 @@ class CatGame extends Game {
     }
 
     handleEvent(event) {
-        //console.log(event);
+
+        console.log(event);
+
+        if (event.type === 'keydown') {
+            // See whether we care about this key
+            if (event.code in GameKeys) {
+                this.keysPressed = this.keysPressed | GameKeys[event.code];
+            }
+        }
+        if (event.type === 'keyup') {
+            // See whether we care about this key
+            if (event.code in GameKeys) {
+                this.keysPressed = this.keysPressed & ~GameKeys[event.code];
+            }
+        }
+        console.log("KEYS PRESSED: ", Number(this.keysPressed).toString(2));
 
         if (event.shiftKey){
             this.player.speed = Speed.FAST
