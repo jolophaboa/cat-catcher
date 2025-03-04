@@ -387,6 +387,18 @@ class CatGame extends Game {
 
     update() {
 
+        let gamepads = navigator.getGamepads();
+        if (gamepads.length > 0) {
+            let gamepad = gamepads[0];
+            
+            for (let i = 0; i < gamepad.buttons.length; i++) {
+                let button = gamepad.buttons[i];
+                if (button.pressed) {
+                    console.log(`Button ${i} is pressed`);
+                }
+            }
+        }
+
         if (this.keyIsPressed('ShiftLeft') || this.keyIsPressed('ShiftRight')) {
             this.player.speed = Speed.FAST
         } else{
