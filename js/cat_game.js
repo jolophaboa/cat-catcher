@@ -341,6 +341,7 @@ const GameKeys = {
     ShiftLeft: 256,
     ShiftRight: 512,   
 }
+const DirectionalKeys = 255
 
 class CatGame extends Game {
     cats = []
@@ -370,7 +371,9 @@ class CatGame extends Game {
         // console.log(event);
 
         if (event.type === 'keydown') {
-            // See whether we care about this key
+            if (DirectionalKeys & GameKeys[event.code]) {
+                this.keysPressed = this.keysPressed & ~DirectionalKeys
+            }
             if (event.code in GameKeys) {
                 this.keysPressed = this.keysPressed | GameKeys[event.code];
             }
@@ -386,10 +389,8 @@ class CatGame extends Game {
     }
 
     update() {
-
-        let gamepads = navigator.getGamepads();
-        if (gamepads.length > 0) {
-            let gamepad = gamepads[0];
+        let gamepad = navigator.getGamepads()[0];
+        if (gamepad) {
             
             for (let i = 0; i < gamepad.buttons.length; i++) {
                 let button = gamepad.buttons[i];
