@@ -341,7 +341,18 @@ const GameKeys = {
     ShiftLeft: 256,
     ShiftRight: 512,   
 }
+//The combined total of all DirectionalKeys
 const DirectionalKeys = 255
+
+
+const GamepadButttons = {
+    Right: 15,
+    Left: 14,
+    Up: 12,
+    Down: 13,
+    Y: 3,
+}
+
 
 class CatGame extends Game {
     cats = []
@@ -388,19 +399,20 @@ class CatGame extends Game {
 
     }
 
-    update() {
+    update() { 
         let gamepad = navigator.getGamepads()[0];
+        let pressedButtons = {};
         if (gamepad) {
-            
             for (let i = 0; i < gamepad.buttons.length; i++) {
                 let button = gamepad.buttons[i];
                 if (button.pressed) {
                     console.log(`Button ${i} is pressed`);
+                    pressedButtons[i] = true
                 }
             }
         }
 
-        if (this.keyIsPressed('ShiftLeft') || this.keyIsPressed('ShiftRight')) {
+        if (this.keyIsPressed('ShiftLeft') || this.keyIsPressed('ShiftRight') || pressedButtons[GamepadButttons.Y]) {
             this.player.speed = Speed.FAST
         } else{
             this.player.speed = Speed.NORMAL
@@ -408,22 +420,22 @@ class CatGame extends Game {
 
         this.player.moving = false;
 
-        if (this.keyIsPressed('KeyW') || this.keyIsPressed('ArrowUp')) {
+        if (this.keyIsPressed('KeyW') || this.keyIsPressed('ArrowUp') || pressedButtons[GamepadButttons.Up]) {
             this.player.direction = Direction.UP;
             this.player.moving = true;
         }
 
-        if (this.keyIsPressed('KeyS') || this.keyIsPressed('ArrowDown')) {
+        if (this.keyIsPressed('KeyS') || this.keyIsPressed('ArrowDown') || pressedButtons[GamepadButttons.Down]) {
             this.player.direction = Direction.DOWN;
             this.player.moving = true;
         }
 
-        if (this.keyIsPressed('KeyA') || this.keyIsPressed('ArrowLeft')) {
+        if (this.keyIsPressed('KeyA') || this.keyIsPressed('ArrowLeft') || pressedButtons[GamepadButttons.Left]) {
             this.player.direction = Direction.LEFT;
             this.player.moving = true;
         }
 
-        if (this.keyIsPressed('KeyD') || this.keyIsPressed('ArrowRight')) {
+        if (this.keyIsPressed('KeyD') || this.keyIsPressed('ArrowRight') || pressedButtons[GamepadButttons.Right]) {
             this.player.direction = Direction.RIGHT;
             this.player.moving = true;
         }
