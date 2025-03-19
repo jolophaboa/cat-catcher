@@ -230,19 +230,19 @@ class Cat extends MovingObject {
     constructor(wandering_sprite, following_sprite) {
         super();
         let wanderingSpriteSheet = new SpriteSheet(wandering_sprite);
-        wanderingSpriteSheet.describeSprite(1, 2, Direction.DOWN);
-        wanderingSpriteSheet.describeSprite(2, 1, Direction.RIGHT);
-        wanderingSpriteSheet.describeSprite(1, 1, Direction.LEFT);
-        wanderingSpriteSheet.describeSprite(2, 2, Direction.UP);
-        wanderingSpriteSheet.describeSprite(0, 1, Direction.STOPPED);
+        wanderingSpriteSheet.describeSprite(3, 0, Direction.DOWN);
+        wanderingSpriteSheet.describeSprite(2, 0, Direction.RIGHT);
+        wanderingSpriteSheet.describeSprite(1, 0, Direction.LEFT);
+        wanderingSpriteSheet.describeSprite(0, 0, Direction.UP);
+        wanderingSpriteSheet.describeSprite(1, 2, Direction.STOPPED);
         this.spriteSheets[CatMode.WANDERING] = wanderingSpriteSheet;
 
         let followingSpriteSheet = new SpriteSheet(following_sprite);
-        followingSpriteSheet.describeSprite(1, 2, Direction.DOWN);
+        followingSpriteSheet.describeSprite(3, 1, Direction.DOWN);
         followingSpriteSheet.describeSprite(2, 1, Direction.RIGHT);
         followingSpriteSheet.describeSprite(1, 1, Direction.LEFT);
-        followingSpriteSheet.describeSprite(2, 2, Direction.UP);
-        followingSpriteSheet.describeSprite(0, 1, Direction.STOPPED);
+        followingSpriteSheet.describeSprite(0, 1, Direction.UP);
+        followingSpriteSheet.describeSprite(1, 2, Direction.STOPPED)
         this.spriteSheets[CatMode.FOLLOWING] = followingSpriteSheet;
 
         this.currentSpriteSheet = followingSpriteSheet;
@@ -305,18 +305,8 @@ class Player extends MovingObject {
 
 
 const possibleCats = [
-    ['brown_cat.png', 'hungry_cat.png'],
-    ['calico_cat.png','hungry_cat.png'],
-    ['black_cat.png','hungry_cat.png'],
-    ['white_cat.png','hungry_cat.png'],
-    ['unicorn_cat.png','hungry_cat.png'],
-    ['tiger_cat.png','hungry_cat.png'],
-    ['grey_cat.png','hungry_cat.png'],
-    ['orange_cat.png','hungry_cat.png'],
-    ['white_cat_2.png','hungry_cat.png'],
-    ['pale_cat.png','hungry_cat.png'],
-    ['striped_brown_cat.png', 'hungry_cat.png'],
-    ['striped_dark_grey_cat.png', 'hungry_cat.png'],
+    ['grey.cat.png', 'grey.cat.png'],
+    
 ];
 
 function randomCat() {
