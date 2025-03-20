@@ -5,8 +5,22 @@ const HEIGHT_IN_BLOCKS = 14;
 const WIDTH_IN_PIXELS = WIDTH_IN_BLOCKS * BLOCK_SIZE;
 const HEIGHT_IN_PIXELS = HEIGHT_IN_BLOCKS * BLOCK_SIZE;
 
-let singleQuoteString = 'Testing Testing';
+function randomChoice(options){
+    let max = options.length;
+    let randomIndex = Math.floor(Math.random() * max)
+    return options[randomIndex]
+}
 
+function hasRandomTimePassed(startTime, minTime, maxTime){
+    let randomTime = minTime + Math.random() * (maxTime - minTime);
+    let time = Date.now();
+    if (time - startTime > randomTime) {
+        return true
+    }
+    else {
+        return false
+    }
+}
 class Game {
 
     static canvas;
@@ -87,8 +101,16 @@ const Direction = {
     DOWN: 1,
     LEFT: 2,
     RIGHT: 3,
-    STOPPED: 4
 };
+
+function randomDirection() {
+    return randomChoice([
+        Direction.UP,
+        Direction.DOWN,
+        Direction.LEFT,
+        Direction.RIGHT,
+    ])
+}
 
 function isNearby(object1, object2) {
     let center1 = object1.centerPoint();
@@ -124,6 +146,16 @@ const Speed = {
     NORMAL: 2,
     FAST: 3,
 }
+
+function randomSpeed() {
+    return randomChoice([
+        Speed.FAST,
+        Speed.NORMAL,
+        Speed.SLOW,
+        Speed.FAST,
+    ])
+}
+
 class MovingObject {
     posX = 50;
     posY = 50;
@@ -132,6 +164,11 @@ class MovingObject {
     direction = Direction.DOWN;
     spriteSheets = {};
     currentSpriteSheet;
+
+    constructor(){
+        this.direction = randomDirection()
+    
+    };
 
     centerPoint() {
         return new Point(this.posX + BLOCK_SIZE / 2,
@@ -193,12 +230,7 @@ class MovingObject {
             if (this.moving) {
                 this.posY += distance
             }
-        } else if (this.direction === Direction.STOPPED) {
-            if (this.moving) {
-                this.posX += 0
-            }
         }
-       
         this.keepInBounds();
 
         sprite.draw(this.posX, this.posY);
@@ -227,54 +259,71 @@ class Cat extends MovingObject {
     lastRandomChangeTime = Date.now();
     mode = CatMode.WANDERING;
 
-    constructor(wandering_sprite, following_sprite) {
+    constructor(spriteSheetName) {
         super();
-        let wanderingSpriteSheet = new SpriteSheet(wandering_sprite);
+        this.speed = randomSpeed()
+        let wanderingSpriteSheet = new SpriteSheet(spriteSheetName);
         wanderingSpriteSheet.describeSprite(3, 0, Direction.DOWN);
         wanderingSpriteSheet.describeSprite(2, 0, Direction.RIGHT);
         wanderingSpriteSheet.describeSprite(1, 0, Direction.LEFT);
         wanderingSpriteSheet.describeSprite(0, 0, Direction.UP);
-        wanderingSpriteSheet.describeSprite(1, 2, Direction.STOPPED);
         this.spriteSheets[CatMode.WANDERING] = wanderingSpriteSheet;
 
-        let followingSpriteSheet = new SpriteSheet(following_sprite);
+        let followingSpriteSheet = new SpriteSheet(spriteSheetName);
         followingSpriteSheet.describeSprite(3, 1, Direction.DOWN);
         followingSpriteSheet.describeSprite(2, 1, Direction.RIGHT);
         followingSpriteSheet.describeSprite(1, 1, Direction.LEFT);
         followingSpriteSheet.describeSprite(0, 1, Direction.UP);
-        followingSpriteSheet.describeSprite(1, 2, Direction.STOPPED)
         this.spriteSheets[CatMode.FOLLOWING] = followingSpriteSheet;
+
+        let loafingSpriteSheet = new SpriteSheet(spriteSheetName);
+        loafingSpriteSheet.describeSprite(0, 3, Direction.DOWN);
+        loafingSpriteSheet.describeSprite(2, 3, Direction.RIGHT);
+        loafingSpriteSheet.describeSprite(1, 3, Direction.LEFT);
+        loafingSpriteSheet.describeSprite(3, 3, Direction.UP);
+        this.spriteSheets[CatMode.LOAFING] = loafingSpriteSheet;
+
+        let sittingSpriteSheet = new SpriteSheet(spriteSheetName);
+        sittingSpriteSheet.describeSprite(0, 2, Direction.DOWN);
+        sittingSpriteSheet.describeSprite(2, 2, Direction.RIGHT);
+        sittingSpriteSheet.describeSprite(1, 2, Direction.LEFT);
+        sittingSpriteSheet.describeSprite(3, 2, Direction.UP);
+        this.spriteSheets[CatMode.SITTING] = sittingSpriteSheet;
 
         this.currentSpriteSheet = followingSpriteSheet;
         
     }
     randomSpeed() {
-        let max = 3;
-        let RSN = Math.random() * max;
-        if (RSN <= 1){
-            this.speed = Speed.SLOW;
-        }
-        else if (RSN >= 2){
-            this.speed = Speed.FAST;
-        }
-        else {
-            this.speed = Speed.NORMAL;
-        }
+        this.speed = randomChoice([Speed.NORMAL,Speed.SLOW, Speed.FAST,])
     }
     moveRandomly() {
-        let max = 20000
-        let number3 = Math.random() * max;
-        let time = Date.now();
-        if (time - this.lastRandomChangeTime > number3) {
+        if (hasRandomTimePassed(this.lastRandomChangeTime, 1000, 4000)) {
             // One second has gone by since the last random change
             // Make a random change to the cat's state
-            let max = 5
-            let Number1 = Math.random() * max;
-            let RandomDirection = Math.floor(Number1)
-            this.direction = RandomDirection
+            this.direction = randomChoice([
+                Direction.DOWN,
+                Direction.LEFT,
+                Direction.RIGHT,
+                Direction.UP,
+            ])
             this.moving = true
             this.randomSpeed();
-            this.lastRandomChangeTime = time;
+            this.lastRandomChangeTime = Date.now();
+        }
+    }
+
+    actLikeACat() {
+        if (this.mode == CatMode.WANDERING){
+            this.moveRandomly()
+        }
+        else if (this.mode == CatMode.FOLLOWING) {
+
+        }
+        else if (this.mode == CatMode.SITTING) {
+
+        }
+        else if (this.mode == CatMode.LOAFING) {
+
         }
     }
 
@@ -305,7 +354,7 @@ class Player extends MovingObject {
 
 
 const possibleCats = [
-    ['grey_cat.png', 'grey_cat.png'],
+    'grey_cat.png',
     
 ];
 
@@ -314,8 +363,7 @@ function randomCat() {
     let max = possibleCats.length;
     let catNumber = Math.floor(Math.random() * max);
     let catInfo = possibleCats[catNumber];
-    return new Cat(catInfo[0], catInfo[1])
-
+    return new Cat(catInfo)
 }
 
 
