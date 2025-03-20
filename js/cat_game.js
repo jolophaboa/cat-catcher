@@ -355,6 +355,8 @@ class Player extends MovingObject {
 
 const possibleCats = [
     'grey_cat.png',
+    'orange_cat.png',
+    'black_cat.png',
     
 ];
 
