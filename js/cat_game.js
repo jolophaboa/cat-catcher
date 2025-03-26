@@ -11,6 +11,10 @@ function randomChoice(options){
     return options[randomIndex]
 }
 
+function randomInt (max){
+    return Math.floor(Math.random() * (max + 1));
+}
+
 function hasRandomTimePassed(startTime, minTime, maxTime){
     let randomTime = minTime + Math.random() * (maxTime - minTime);
     let time = Date.now();
@@ -166,7 +170,6 @@ class MovingObject {
     currentSpriteSheet;
 
     constructor(){
-        this.direction = randomDirection()
     
     };
 
@@ -261,6 +264,9 @@ class Cat extends MovingObject {
 
     constructor(spriteSheetName) {
         super();
+        this.posX = randomInt(WIDTH_IN_PIXELS - BLOCK_SIZE);
+        this.posY = randomInt(HEIGHT_IN_PIXELS - BLOCK_SIZE);
+        this.direction = randomDirection()
         this.speed = randomSpeed()
         let wanderingSpriteSheet = new SpriteSheet(spriteSheetName);
         wanderingSpriteSheet.describeSprite(3, 0, Direction.DOWN);
