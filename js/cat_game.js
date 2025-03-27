@@ -259,7 +259,7 @@ const CatSpeed = {
 
 class Cat extends MovingObject {
 
-    lastRandomChangeTime = Date.now();
+    nextChangeTime = Date.now();
     mode = CatMode.WANDERING;
 
     constructor(spriteSheetName) {
@@ -296,57 +296,67 @@ class Cat extends MovingObject {
         sittingSpriteSheet.describeSprite(3, 2, Direction.UP);
         this.spriteSheets[CatMode.SITTING] = sittingSpriteSheet;
 
+        // Start with a random next change time
+        this.nextChangeTime = Date.now() + randomInt(5000)
+
         this.currentSpriteSheet = followingSpriteSheet;
         
     }
     randomSpeed() {
         this.speed = randomChoice([Speed.NORMAL,Speed.SLOW, Speed.FAST,])
     }
-    moveRandomly() {
-        
+   
+    actBasedOnCurrentMode() {
+        if (this.mode == CatMode.WANDERING || this.mode == CatMode.FOLLOWING) {
+            this.moving = true;
+        } else {
+            this.moving = false;
+        }
     }
 
-    actLikeACat() {
-        
+    decideWhatToDoNext() {
+        if(this.nextChangeTime > Date.now()){
+            return
+        }
         
         if (this.mode == CatMode.WANDERING){
-            if (hasRandomTimePassed(this.lastRandomChangeTime, 1000, 4000)) {
-                // One second has gone by since the last random change
-                // Make a random change to the cat's state
-                this.direction = randomChoice([
-                    Direction.DOWN,
-                    Direction.LEFT,
-                    Direction.RIGHT,
-                    Direction.UP,
+            this.direction = randomChoice([
+                Direction.DOWN,
+                Direction.LEFT,
+                Direction.RIGHT,
+                Direction.UP,
 
-                ])
-                this.mode = randomChoice([ 
-                    CatMode.LOAFING,
-                    CatMode.SITTING,
-                ])
-                this.moving = true
-                this.randomSpeed();
-                this.lastRandomChangeTime = Date.now();
-            }
-        }
-        else if (this.mode == CatMode.FOLLOWING) {
-            this.moving = true
+            ])
+            this.mode = randomChoice([ 
+                CatMode.LOAFING,
+                CatMode.SITTING,
+            ]);
+            this.randomSpeed();
 
-        }
-        else if (this.mode == CatMode.SITTING) {
-            this.moving = false
+            // Make next change after 1-4 seconds
+            this.nextChangeTime = Date.now() + 1000 + randomInt(3000)
 
-        }
-        else if (this.mode == CatMode.LOAFING) {
-            this.moving = false
+        } else if (this.mode == CatMode.FOLLOWING) {
+
+
+        } else if (this.mode == CatMode.SITTING) {
+            this.mode = randomChoice([
+                CatMode.LOAFING,
+                CatMode.WANDERING,
+            ])
+            this.nextChangeTime = Date.now() + 2000 + randomInt(10000)
+
+        } else if (this.mode == CatMode.LOAFING) {
+
 
         }
     }
 
     draw() {
-    
+
         this.currentSpriteSheet = this.spriteSheets[this.mode];
-        this.actLikeACat();
+        this.actBasedOnCurrentMode();
+        this.decideWhatToDoNext();
         
         super.draw();
 
