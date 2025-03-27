@@ -373,6 +373,7 @@ const possibleCats = [
     'grey_cat.png',
     'orange_cat.png',
     'black_cat.png',
+    'white_cat.png',
     
 ];
 
