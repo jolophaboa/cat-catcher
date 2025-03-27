@@ -330,6 +330,7 @@ class Cat extends MovingObject {
             this.mode = randomChoice([ 
                 CatMode.LOAFING,
                 CatMode.SITTING,
+                CatMode.WANDERING,
             ]);
             this.randomSpeed();
 
@@ -337,16 +338,28 @@ class Cat extends MovingObject {
             this.nextChangeTime = Date.now() + 1000 + randomInt(3000)
 
         } else if (this.mode == CatMode.FOLLOWING) {
-
-
-        } else if (this.mode == CatMode.SITTING) {
             this.mode = randomChoice([
                 CatMode.LOAFING,
                 CatMode.WANDERING,
             ])
             this.nextChangeTime = Date.now() + 2000 + randomInt(10000)
 
+
+        } else if (this.mode == CatMode.SITTING) {
+            this.mode = randomChoice([
+                CatMode.LOAFING,
+                CatMode.WANDERING,
+                CatMode.SITTING,
+            ])
+            this.nextChangeTime = Date.now() + 2000 + randomInt(10000)
+
         } else if (this.mode == CatMode.LOAFING) {
+            this.mode = randomChoice([
+                CatMode.SITTING,
+                CatMode.WANDERING,
+                CatMode.LOAFING,
+            ])
+            this.nextChangeTime = Date.now() + 2000 + randomInt(10000)
 
 
         }
