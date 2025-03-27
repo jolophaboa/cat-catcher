@@ -303,41 +303,51 @@ class Cat extends MovingObject {
         this.speed = randomChoice([Speed.NORMAL,Speed.SLOW, Speed.FAST,])
     }
     moveRandomly() {
-        if (hasRandomTimePassed(this.lastRandomChangeTime, 1000, 4000)) {
-            // One second has gone by since the last random change
-            // Make a random change to the cat's state
-            this.direction = randomChoice([
-                Direction.DOWN,
-                Direction.LEFT,
-                Direction.RIGHT,
-                Direction.UP,
-            ])
-            this.moving = true
-            this.randomSpeed();
-            this.lastRandomChangeTime = Date.now();
-        }
+        
     }
 
     actLikeACat() {
+        
+        
         if (this.mode == CatMode.WANDERING){
-            this.moveRandomly()
+            if (hasRandomTimePassed(this.lastRandomChangeTime, 1000, 4000)) {
+                // One second has gone by since the last random change
+                // Make a random change to the cat's state
+                this.direction = randomChoice([
+                    Direction.DOWN,
+                    Direction.LEFT,
+                    Direction.RIGHT,
+                    Direction.UP,
+
+                ])
+                this.mode = randomChoice([ 
+                    CatMode.LOAFING,
+                    CatMode.SITTING,
+                ])
+                this.moving = true
+                this.randomSpeed();
+                this.lastRandomChangeTime = Date.now();
+            }
         }
         else if (this.mode == CatMode.FOLLOWING) {
+            this.moving = true
 
         }
         else if (this.mode == CatMode.SITTING) {
+            this.moving = false
 
         }
         else if (this.mode == CatMode.LOAFING) {
+            this.moving = false
 
         }
     }
 
     draw() {
+    
         this.currentSpriteSheet = this.spriteSheets[this.mode];
-        if (this.mode == CatMode.WANDERING) {
-            this.moveRandomly();
-        }
+        this.actLikeACat();
+        
         super.draw();
 
     }
@@ -491,7 +501,7 @@ class CatGame extends Game {
             if (isNearby(cat, this.player)) {
                 cat.mode = CatMode.FOLLOWING;
             } else {
-                cat.mode = CatMode.WANDERING;
+             //   cat.mode = CatMode.WANDERING;
             }   
             cat.draw(); 
         }
