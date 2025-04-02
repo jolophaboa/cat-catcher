@@ -328,7 +328,6 @@ class Cat extends MovingObject {
 
             ])
             this.mode = randomChoice([ 
-                CatMode.LOAFING,
                 CatMode.SITTING,
                 CatMode.WANDERING,
             ]);
