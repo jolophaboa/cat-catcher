@@ -261,6 +261,7 @@ class Cat extends MovingObject {
 
     nextChangeTime = Date.now();
     mode = CatMode.WANDERING;
+    nearbyPlayer = null;
 
     constructor(spriteSheetName) {
         super();
@@ -305,17 +306,40 @@ class Cat extends MovingObject {
     randomSpeed() {
         this.speed = randomChoice([Speed.NORMAL,Speed.SLOW, Speed.FAST,])
     }
+
+    cancelNextChange() {
+        this.nextChangeTime = null
+    }
    
     actBasedOnCurrentMode() {
-        if (this.mode == CatMode.WANDERING || this.mode == CatMode.FOLLOWING) {
+        if (this.mode == CatMode.WANDERING) {
+            if (this.nearbyPlayer) {
+                this.cancelNextChange();
+                this.mode = CatMode.FOLLOWING;
+            }
+        }
+        
+        if (this.mode == CatMode.FOLLOWING) {
+            if (!this.nearbyPlayer) {
+                this.mode = CatMode.WANDERING;
+            }
+        }
+
+        if (this.mode == CatMode.FOLLOWING) {
+            this.direction = this.nearbyPlayer.direction;
+            this.speed = this.nearbyPlayer.speed;
+            this.moving = this.nearbyPlayer.moving;
+        }
+
+        if (this.mode == CatMode.WANDERING) {
             this.moving = true;
-        } else {
+        } else if (this.mode == CatMode.LOAFING || this.mode == CatMode.SITTING) {
             this.moving = false;
         }
     }
 
     decideWhatToDoNext() {
-        if(this.nextChangeTime > Date.now()){
+        if(this.nextChangeTime == null || this.nextChangeTime > Date.now()){
             return
         }
         
@@ -328,8 +352,8 @@ class Cat extends MovingObject {
 
             ])
             this.mode = randomChoice([ 
-                CatMode.LOAFING,
                 CatMode.SITTING,
+                CatMode.WANDERING,
             ]);
             this.randomSpeed();
 
@@ -337,16 +361,28 @@ class Cat extends MovingObject {
             this.nextChangeTime = Date.now() + 1000 + randomInt(3000)
 
         } else if (this.mode == CatMode.FOLLOWING) {
-
-
-        } else if (this.mode == CatMode.SITTING) {
             this.mode = randomChoice([
                 CatMode.LOAFING,
                 CatMode.WANDERING,
             ])
             this.nextChangeTime = Date.now() + 2000 + randomInt(10000)
 
+
+        } else if (this.mode == CatMode.SITTING) {
+            this.mode = randomChoice([
+                CatMode.LOAFING,
+                CatMode.WANDERING,
+                CatMode.SITTING,
+            ])
+            this.nextChangeTime = Date.now() + 2000 + randomInt(10000)
+
         } else if (this.mode == CatMode.LOAFING) {
+            this.mode = randomChoice([
+                CatMode.SITTING,
+                CatMode.WANDERING,
+                CatMode.LOAFING,
+            ])
+            this.nextChangeTime = Date.now() + 2000 + randomInt(10000)
 
 
         }
@@ -384,6 +420,7 @@ const possibleCats = [
     'orange_cat.png',
     'black_cat.png',
     'white_cat.png',
+    'calico_cat.png',
     
 ];
 
@@ -510,9 +547,9 @@ class CatGame extends Game {
         Game.ctx.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
         for (let cat of this.cats) {
             if (isNearby(cat, this.player)) {
-                cat.mode = CatMode.FOLLOWING;
+                cat.nearbyPlayer = this.player;
             } else {
-             //   cat.mode = CatMode.WANDERING;
+                cat.nearbyPlayer = null;
             }   
             cat.draw(); 
         }
