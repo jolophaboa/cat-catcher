@@ -1,5 +1,6 @@
 const BLOCK_SIZE = 16;
 const SPRITE_SHEET_ROOT = 'images/sprite_sheets/';
+const TILE_ROOT = 'images/tiles/';
 const WIDTH_IN_BLOCKS = 24;
 const HEIGHT_IN_BLOCKS = 14;
 const WIDTH_IN_PIXELS = WIDTH_IN_BLOCKS * BLOCK_SIZE;
@@ -62,6 +63,8 @@ class Game {
 }
 
 class Sprite {
+
+    image;
 
     constructor(image, offsetX, offsetY, widthInBlocks, heightInBlocks) {
         this.image = image;
@@ -457,13 +460,74 @@ const GamepadButttons = {
     Y: 3,
 }
 
+class Map {
+    tileTypes = {
+        '1': 'big_rocks.png',
+        '2': 'small_rocks.png',
+        '3': 'cafe_sign.png',
+    };
+    
+    mapData = "";
+    map = [];
+
+    tiles = {};
+
+    constructor(mapData) {
+        this.mapData = mapData;
+
+        // Create tiles based on the images listed in tileTypes
+        for (let tileType in this.tileTypes) {
+            let image = new Image();
+            let imageName = this.tileTypes[tileType];
+            image.src = TILE_ROOT + imageName;
+
+            // FIXME: current tiles are 32x32 pixels, so to make them show up properly
+            // we using a 2-blaock x 2-block sprite.           
+            // Once the tiles have been updated this can be changed.
+            this.tiles[tileType] = new Sprite(image, 0, 0, 2, 2);
+        }
+
+        this.loadMap();
+    }
+
+    loadMap() {
+        // Read this.mapData and use it to create this.map
+        let rows = this.mapData.split('\n');
+        for (let y = 0; y < rows.length; y++) {
+            let row = rows[y].trim();
+            let chars = row.split('');
+            this.map[y] = [];
+            for (let x = 0; x < chars.length; x++) {
+                let tileType = chars[x];
+                this.map[y][x] = tileType;
+            }
+        }
+    }
+
+    draw() {
+        // Based on this.map, draw tiles at the correct locations
+        for (let y = 0; y < this.map.length; y++) {
+            let row = this.map[y];
+            for (let x = 0; x < row.length; x++) {
+                let tileType = row[x]
+                let tile = this.tiles[tileType];
+                if (tile) {
+                    tile.draw(x * BLOCK_SIZE, y * BLOCK_SIZE);
+                }
+            }
+        }
+    }
+}
+
 
 class CatGame extends Game {
     cats = []
     keysPressed = 0;
+    map;
 
     setup() {
-        
+
+        this.map = new Map(level1);
         
         let max = 18
         let numberofcats = 2 + Math.floor(Math.random() * max);
@@ -545,6 +609,9 @@ class CatGame extends Game {
         }
 
         Game.ctx.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
+
+        this.map.draw();
+
         for (let cat of this.cats) {
             if (isNearby(cat, this.player)) {
                 cat.nearbyPlayer = this.player;
