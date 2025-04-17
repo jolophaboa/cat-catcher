@@ -48,3 +48,5 @@ const level3 = `
 100000000000000000000001
 111111111111111111111111
 `;
+
+//Algorithom: check the numbers on map; see if number corrisponds with tile; place selected tile at coordanates of number 
