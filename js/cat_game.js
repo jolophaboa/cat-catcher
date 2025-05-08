@@ -527,7 +527,7 @@ class CatGame extends Game {
 
     setup() {
 
-        this.map = new Map(level1);
+        this.map = new Map(level2);
         
         let max = 18
         let numberofcats = 2 + Math.floor(Math.random() * max);
