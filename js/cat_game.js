@@ -484,7 +484,7 @@ class Map {
             // FIXME: current tiles are 32x32 pixels, so to make them show up properly
             // we using a 2-blaock x 2-block sprite.           
             // Once the tiles have been updated this can be changed.
-            this.tiles[tileType] = new Sprite(image, 0, 0, 2, 2);
+            this.tiles[tileType] = new Sprite(image, 0, 0, 1, 1);
         }
 
         this.loadMap();
@@ -493,6 +493,8 @@ class Map {
     loadMap() {
         // Read this.mapData and use it to create this.map
         let rows = this.mapData.split('\n');
+        // Filter out blank lines
+        rows = rows.filter((line) => line.length > 0)
         for (let y = 0; y < rows.length; y++) {
             let row = rows[y].trim();
             let chars = row.split('');
