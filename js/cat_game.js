@@ -215,10 +215,22 @@ class MovingObject {
         }
     }
 
-    draw() {
+    hasPermittedMapPosition(map) {
+        // Only the bottom block of a sprite counts when calculating map barriers
+        return map.isempty (
+            this.posX, 
+            this.posY + (this.currentSpriteSheet.heightInBlocks - 1) * BLOCK_SIZE,
+            this.currentSpriteSheet.widthInBlocks*BLOCK_SIZE,
+            BLOCK_SIZE);
+    }
+
+    draw(map) {
         let sprite = this.currentSpriteSheet.getSprite(this.direction);
 
         let distance = this.distancePerFrame();
+
+        let previousX = this.posX;
+        let previousY = this.posY;
 
         if (this.direction === Direction.RIGHT) {
             if (this.moving) {
@@ -237,7 +249,12 @@ class MovingObject {
                 this.posY += distance
             }
         }
-        this.keepInBounds();
+        
+        if (!this.hasPermittedMapPosition(map)) {
+            this.posX = previousX
+            this.posY = previousY
+        }
+        //this.keepInBounds();
 
         sprite.draw(this.posX, this.posY);
     }
@@ -266,10 +283,9 @@ class Cat extends MovingObject {
     mode = CatMode.WANDERING;
     nearbyPlayer = null;
 
-    constructor(spriteSheetName) {
+    constructor(spriteSheetName, map) {
         super();
-        this.posX = randomInt(WIDTH_IN_PIXELS - BLOCK_SIZE);
-        this.posY = randomInt(HEIGHT_IN_PIXELS - BLOCK_SIZE);
+
         this.direction = randomDirection()
         this.speed = randomSpeed()
         let wanderingSpriteSheet = new SpriteSheet(spriteSheetName);
@@ -304,6 +320,13 @@ class Cat extends MovingObject {
         this.nextChangeTime = Date.now() + randomInt(5000)
 
         this.currentSpriteSheet = followingSpriteSheet;
+
+        // Keep picking random locations until we find one that works.
+        do {
+            this.posX = randomInt(WIDTH_IN_PIXELS - BLOCK_SIZE);
+            this.posY = randomInt(HEIGHT_IN_PIXELS - BLOCK_SIZE);
+        } while (!this.hasPermittedMapPosition(map))
+
         
     }
     randomSpeed() {
@@ -391,13 +414,13 @@ class Cat extends MovingObject {
         }
     }
 
-    draw() {
+    draw(map) {
 
         this.currentSpriteSheet = this.spriteSheets[this.mode];
         this.actBasedOnCurrentMode();
         this.decideWhatToDoNext();
         
-        super.draw();
+        super.draw(map);
 
     }
    
@@ -427,12 +450,12 @@ const possibleCats = [
     
 ];
 
-function randomCat() {
+function randomCat(map) {
     // pick a random index
     let max = possibleCats.length;
     let catNumber = Math.floor(Math.random() * max);
     let catInfo = possibleCats[catNumber];
-    return new Cat(catInfo)
+    return new Cat(catInfo, map)
 }
 
 
@@ -506,6 +529,23 @@ class Map {
         }
     }
 
+    isempty(x, y, width, height) {
+        let startBlockx = Math.floor(x/BLOCK_SIZE);
+        let startBlocky = Math.floor(y/BLOCK_SIZE);
+        let endBlockx = Math.ceil((x+width-1)/BLOCK_SIZE);
+        let endBlocky = Math.ceil((y+height-1)/BLOCK_SIZE);
+        for (let bx = startBlockx; bx < endBlockx; bx++) {
+            for (let by = startBlocky; by < endBlocky; by++) {
+                let mapTileType = this.map[by]?.[bx];
+                let isBarrier =  (mapTileType == "1");
+                if (isBarrier) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
     draw() {
         // Based on this.map, draw tiles at the correct locations
         for (let y = 0; y < this.map.length; y++) {
@@ -534,7 +574,7 @@ class CatGame extends Game {
         let max = 18
         let numberofcats = 2 + Math.floor(Math.random() * max);
         for (let i = 0; i<numberofcats; i++) {
-            this.cats.push(randomCat());
+            this.cats.push(randomCat(this.map));
         }
         
         this.player = new Player();
@@ -620,10 +660,10 @@ class CatGame extends Game {
             } else {
                 cat.nearbyPlayer = null;
             }   
-            cat.draw(); 
+            cat.draw(this.map); 
         }
     
 
-        this.player.draw();
+        this.player.draw(this.map);
     }
 }
